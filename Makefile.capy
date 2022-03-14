@@ -1,0 +1,110 @@
+export BOARD = capybara
+export BOARD_MAJOR = 2
+export BOARD_MINOR = 0
+export DEVICE = msp430fr5994
+
+
+# Set to 1 to run this code on a launchpad
+export LIBCAPYBARA_FXL_OFF = 0
+
+
+SHARED_DEPS +=  libmspbuiltins:gcc libio:gcc libcapybara:gcc  \
+        libradio:gcc libmspuartlink:gcc libmsp:gcc liblsm:gcc libfxl:gcc libmspware:gcc\
+        libapds:gcc
+
+
+# Config stuff
+export MAIN_CLOCK_FREQ = 8000000
+
+#export CLOCK_FREQ_ACLK = 32768
+export CLOCK_FREQ_ACLK = 8000
+
+export CLOCK_FREQ_SMCLK = $(MAIN_CLOCK_FREQ)
+export CLOCK_FREQ_MCLK = $(MAIN_CLOCK_FREQ)
+
+export LIBMSP_CLOCK_SOURCE = DCO
+export LIBMSP_DCO_FREQ = $(MAIN_CLOCK_FREQ)
+export LIBMSP_SLEEP_TIMER = B.0.0
+export LIBMSP_SLEEP_TIMER_CLK = ACLK
+export LIBMSP_SLEEP_TIMER_DIV = 8*1
+
+export LIBMSPUARTLINK_UART_IDX = 1
+export LIBMSPUARTLINK_PIN_TX = 2.5
+export LIBMSPUARTLINK_BAUDRATE = 115200
+export LIBMSPUARTLINK_CLK = SMCLK
+
+export LIBCAPYBARA_PIN_VBOOST_OK = 3.6
+
+export LIBCAPYBARA_CONT_POWER ?= 1
+export LIBCAPYBARA_VBANK_COMP_REF = 1.2 # V
+export LIBCAPYBARA_VBANK_COMP_SETTLE_MS = 2
+
+ifeq ($(LIBCAPYBARA_JIT),1)
+export LIBCAPYBARA_DEEP_DISCHARGE = 1.82 # V
+else
+# NOTE: we only want this voltage to be this low when we're running in HIGH
+  # energy mode (i.e. running with the EDLC capacitors. There's a difference
+  # between the voltage measured at the MCU and the voltage measured at VBANK
+  # when we're running with high ESR caps, and the mcu will cut off too early if
+  # we have this up at the usual 1.77. The struggle is that if we're running
+  # with tantalum caps (e.g. bank 0 on capy) then we end up in cold start mode.
+# TODO change this threshold in software depending on which banks we're using
+export LIBCAPYBARA_DEEP_DISCHARGE = 1.75 # V
+endif
+export LIBCAPYBARA_PIN_VB1_DIV = 1.1
+
+override LIBCAPYBARA_SWITCH_DESIGN = NC
+override LIBCAPYBARA_SWITCH_CONTROL = ONE_PIN
+override LIBCAPYBARA_PIN_VBOOST_OK = 3.6
+override LIBCAPYBARA_PIN_VBANK_OK = 3.7
+override LIBCAPYBARA_PIN_BOOST_SW = 4.5
+override LIBCAPYBARA_VBANK_DIV = 10:4.22
+override LIBCAPYBARA_VBANK_COMP_CHAN = E.13 # comparator type and channel for Vbank voltage
+override LIBCAPYBARA_VBANK_COMP_PIN = 3.1
+export LIBCAPYBARA_SWITCH_DESIGN = NC
+export LIBCAPYBARA_SWITCH_CONTROL = ONE_PIN
+export LIBCAPYBARA_PIN_VBOOST_OK = 3.6
+export LIBCAPYBARA_PIN_VBANK_OK = 3.7
+export LIBCAPYBARA_PIN_BOOST_SW = 4.5
+export LIBCAPYBARA_VBANK_DIV = 10:4.22
+export LIBCAPYBARA_VBANK_COMP_CHAN = E.13 # comparator type and channel for Vbank voltage
+export LIBCAPYBARA_VBANK_COMP_PIN = 3.1
+export LIBCAPYBARA_NUM_BANKS = 4
+
+override LIBCAPYBARA_BANK_PORT_0 = J.0
+override LIBCAPYBARA_BANK_PORT_1 = J.1
+override LIBCAPYBARA_BANK_PORT_2 = J.2
+override LIBCAPYBARA_BANK_PORT_3 = J.3
+export LIBCAPYBARA_BANK_PORT_0 = J.0
+export LIBCAPYBARA_BANK_PORT_1 = J.1
+export LIBCAPYBARA_BANK_PORT_2 = J.2
+export LIBCAPYBARA_BANK_PORT_3 = J.3
+
+export LIBCAPYBARA_PRECHG_HANDLING = IMP
+export LIBCAPYBARA_FXL_OFF = 0
+
+export VOLTAGE = 2400
+
+LIBCAPYBARA_LEAN_INIT ?= 1
+
+CONSOLE ?= 1
+
+ifneq ($(CONSOLE),)
+export VERBOSE = 2
+export LIBMSP_SLEEP = 1
+export LIBIO_BACKEND = hwuart
+export LIBMSP_UART_IDX = 0
+export LIBMSP_UART_PIN_TX = 2.0
+export LIBMSP_UART_BAUDRATE = 115200
+export LIBMSP_UART_CLOCK = SMCLK
+export LIBMAT_CONSOLE = 1
+override CFLAGS += -DCONSOLE=2
+endif
+
+ifneq ($(NO_MLARGE),)
+override CFLAGS += -DLIBMSP_NO_MLARGE
+endif
+
+export CFLAGS
+
+

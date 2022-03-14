@@ -1,0 +1,48 @@
+[submodule "tools/maker"]
+	path = tools/maker
+	url = git@github.com:CMUAbstract/maker.git
+[submodule "ext/libmspware"]
+	path = ext/libmspware
+	url = git@github.com:CMUAbstract/libmspware.git
+[submodule "ext/libmsp"]
+	path = ext/libmsp
+	url = git@github.com:CMUAbstract/libmsp.git
+[submodule "ext/libio"]
+	path = ext/libio
+	url = git@github.com:CMUAbstract/libio.git
+[submodule "ext/libmspuartlink"]
+	path = ext/libmspuartlink
+	url = git@github.com:CMUAbstract/libmspuartlink.git
+[submodule "ext/libartibeus"]
+	path = ext/libartibeus
+	url = git@github.com:CMUAbstract/libartibeus-ctrl.git
+[submodule "ext/libads"]
+	path = ext/libads
+	url = git@github.com:CMUAbstract/libads.git
+[submodule "ext/libgnss"]
+	path = ext/libgnss
+	url = git@github.com:CMUAbstract/libgnss.git
+[submodule "ext/libcapybara"]
+	path = ext/libcapybara
+	url = git@github.com:CMUAbstract/libcapybara.git
+[submodule "ext/libfxl"]
+	path = ext/libfxl
+	url = git@github.com:CMUAbstract/libfxl.git
+[submodule "ext/libapds"]
+	path = ext/libapds
+	url = git@github.com:CMUAbstract/libapds.git
+[submodule "ext/librustic"]
+	path = ext/librustic
+	url = git@github.com:CMUAbstract/jit_atomics.git
+[submodule "ext/libradio"]
+	path = ext/libradio
+	url = git@github.com:CMUAbstract/libradio.git
+[submodule "ext/liblsm"]
+	path = ext/liblsm
+	url = git@github.com:CMUAbstract/liblsm.git
+[submodule "ext/libmspbuiltins"]
+	path = ext/libmspbuiltins
+	url = git@github.com:CMUAbstract/libmspbuiltins.git
+[submodule "ext/libfakecatnap"]
+	path = ext/libfakecatnap
+	url = git@github.com:CMUAbstract/libfakecatnap.git
