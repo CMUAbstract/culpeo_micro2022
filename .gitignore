@@ -1,3 +1,6 @@
 tags
 *.dis
 apps/*/bld/
+*.swp
+apps/*/src/*.swp
+screenlog.*

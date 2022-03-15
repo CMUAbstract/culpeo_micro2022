@@ -5,7 +5,7 @@ export DEVICE = msp430fr5994
 
 
 # Set to 1 to run this code on a launchpad
-export LIBCAPYBARA_FXL_OFF = 0
+export LIBCAPYBARA_FXL_OFF = 1
 
 
 SHARED_DEPS +=  libmspbuiltins:gcc libio:gcc libcapybara:gcc  \
