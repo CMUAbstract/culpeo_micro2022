@@ -33,25 +33,25 @@ void burn();
 STARTER_EVT(starter);
 
 DEC_EVT(blink,blink,16000); //TODO translation from seconds to ticks
-DEC_EVT(blink2,blink2,7000); //TODO translation from seconds to ticks
+DEC_EVT(blink2,blink2,4000); //TODO translation from seconds to ticks
 DEC_TSK(burn,burn);
 
 void starter() {
   BIT_FLIP(1,1);
   PRINTF("off to the races!\r\n");
   add_event(&EVENT(blink));
-  //add_event(&EVENT(blink2));
+  add_event(&EVENT(blink2));
   push_task(&TASK(burn));
   dec_event(&EVT_FCN_STARTER);
   EVENT_RETURN();
 }
 
-void blink() {
+void blink() { //16000
   PRINTF("Blinking!\r\n");
   EVENT_RETURN();
 }
 
-void blink2() {
+void blink2() { //4000
   PRINTF("Still blinking!\r\n");
   EVENT_RETURN();
 }

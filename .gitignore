@@ -4,3 +4,4 @@ apps/*/bld/
 *.swp
 apps/*/src/*.swp
 screenlog.*
+*.pdf
