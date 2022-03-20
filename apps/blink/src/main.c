@@ -33,7 +33,7 @@ void burn();
 STARTER_EVT(starter);
 
 DEC_EVT(blink,blink,16000); //TODO translation from seconds to ticks
-DEC_EVT(blink2,blink2,4000); //TODO translation from seconds to ticks
+DEC_EVT(blink2,blink2,7000); //TODO translation from seconds to ticks
 DEC_TSK(burn,burn);
 
 void starter() {
@@ -58,17 +58,15 @@ void blink2() { //4000
 
 
 void burn() {
-  while(1) {
     for (int k = 0; k < 0xff; k++) {
       for( int j = 0; j < 0xff; j++) {
         for(int i = 0; i < 0xff; i++) {
           volatile uint16_t temp = i;
         }
-      } 
+      }
       DISABLE_LFCN_TIMER;
       PRINTF("\t\tTasking %u\r\n",k);
       ENABLE_LFCN_TIMER;
     }
-  }
   return;
 }
