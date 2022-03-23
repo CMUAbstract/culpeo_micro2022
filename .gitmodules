@@ -46,3 +46,6 @@
 [submodule "ext/libfakecatnap"]
 	path = ext/libfakecatnap
 	url = git@github.com:CMUAbstract/libfakecatnap.git
+[submodule "ext/libculpeo"]
+	path = ext/libculpeo
+	url = git@github.com:CMUAbstract/libculpeo.git
