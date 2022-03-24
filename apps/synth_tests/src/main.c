@@ -54,9 +54,11 @@ uint16_t read_adc(void) {
 
 #else
 
-#define ADC_ENABLE
+#define ADC_ENABLE \
+  P1IES |= BIT4;\
+  P1IE |= BIT4;
 
-#define ADC_DISABLE
+#define ADC_DISABLE P1IE &= ~BIT4;
 
 uint16_t read_adc(void) {
   return 0xff;
@@ -70,6 +72,12 @@ uint16_t min_reading = 0xFFFF;
 int main(void) {
   capybara_init();
   // Wait for trigger
+  ADC_ENABLE;
+  // Run timer
+  __delay_cycles(1000);
+  uint16_t val1 = read_adc();
+  // Starting voltage we can use for calibration
+  PRINTF("Initial: %u\r\n",val1);
   while(1) {
     if (P1IN & BIT4){
       break;
@@ -79,10 +87,13 @@ int main(void) {
   // Run timer
   __delay_cycles(1000);
   uint16_t val = read_adc();
+  // Voltage as we run the event
   PRINTF("Starting: %u\r\n",val);
+#ifdef RUN_ADC
 	TA1CCR0 = 8000;
 	TA1CTL = MC__UP | TASSEL__SMCLK;
   TA1CCTL0 = CCIE;
+#endif
   // Sleep while test is going
   while(1) {
     if ((P1IN & BIT4) == 0) {
@@ -94,10 +105,13 @@ int main(void) {
   ADC_DISABLE;
   TA1CCTL0 &= ~CCIE;
   __delay_cycles(8000);
+  // Minimum voltage observed
   PRINTF("Min val: %u\r\n",min_reading);
+  //TODO get vfinal?
   while(1); // hang here
 }
 
+#ifdef RUN_ADC
 
 void __attribute__((interrupt(TIMER1_A0_VECTOR)))
 timerA1ISRHandler(void) {
@@ -115,4 +129,18 @@ timerA1ISRHandler(void) {
    //BIT_FLIP(1,1);
     //TA1CCTL0 |= CCIE; // Re-enable timer int.
 }
-
+#else
+// P1.4 interrupt
+void __attribute__((interrupt(PORT1_VECTOR)))
+timerISRHandler(void) {
+  P1IE &= ~BIT0;
+  P1IFG = 0;
+  uint16_t val;
+  val = read_adc();
+  if (min_reading > val) {
+    min_reading = val;
+  }
+  __bic_SR_register_on_exit(LPM0_bits);
+  P1IE |= BIT0;
+}
+#endif
