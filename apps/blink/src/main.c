@@ -32,7 +32,7 @@ void burn();
 
 STARTER_EVT(starter);
 
-DEC_EVT(blink,blink,4000); //TODO translation from seconds to ticks
+DEC_EVT(blink,blink,8000); //TODO translation from seconds to ticks
 DEC_EVT(blink2,blink2,7000); //TODO translation from seconds to ticks
 DEC_TSK(burn,burn);
 
@@ -50,43 +50,33 @@ uint16_t val = 0;
 uint8_t new_adc_val = 0;
 
 void blink() { //16000
+  LCFN_INTERRUPTS_DISABLE;
   PRINTF("Blinking!\r\n");
-  ADC_ENABLE;
-	// Set and fire Timer A1
-  //TA0CCTL0 &= ~CCIE;
-	TA1CCR0 = 8000;
-	TA1CTL = MC__UP | TASSEL__SMCLK;
-  TA1CCTL0 = CCIE;
-  while(1) {
-    BIT_FLIP(1,0);
-    if (new_adc_val) {
-      TA1CCTL0 &= ~CCIE; //dis
-      PRINTF("Got adc val: %u\r\n",val);
-      TA1CCTL0 |= CCIE; //en
-      new_adc_val = 0;
-    }
-  }
-  ADC_DISABLE;
+  LCFN_INTERRUPTS_ENABLE;
   EVENT_RETURN();
 }
 
 void blink2() { //4000
+  LCFN_INTERRUPTS_DISABLE;
   PRINTF("Still blinking!\r\n");
+  LCFN_INTERRUPTS_ENABLE;
   EVENT_RETURN();
 }
 
 
 void burn() {
-    for (int k = 0; k < 0xff; k++) {
+  while(1) {
+    for (int k = 1; k < 0xff; k++) {
       for( int j = 0; j < 0xff; j++) {
         for(int i = 0; i < 0xff; i++) {
           volatile uint16_t temp = i;
         }
       }
-      DISABLE_LFCN_TIMER;
+      LCFN_INTERRUPTS_DISABLE;
       PRINTF("\t\tTasking %u\r\n",k);
-      ENABLE_LFCN_TIMER;
+      LCFN_INTERRUPTS_ENABLE;
     }
+  }
   return;
 }
 
@@ -116,7 +106,8 @@ void __attribute__((interrupt(TIMER1_A0_VECTOR)))
 timerA1ISRHandler(void) {
 	  //TA1CCTL0 &= ~(CCIFG | CCIE); // Clear flag and stop int
     //BIT_FLIP(1,0);
-    BIT_FLIP(1,1);
+    BIT_FLIP(1,4);
+    BIT_FLIP(1,5);
     TA1R = 0;
     val = read_adc();
     new_adc_val = 1;
