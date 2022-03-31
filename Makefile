@@ -2,7 +2,7 @@ TOOLS_REL_ROOT = tools
 TOOLS =
 TOOLCHAINS = gcc
 
-APPS = blink bluetooth synth_tests
+APPS = blink bluetooth synth_tests atomic_ble
 
 SHARED_DEPS =
 

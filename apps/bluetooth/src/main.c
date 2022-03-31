@@ -19,7 +19,7 @@
 	P##port##DIR |= BIT##bit; \
 	P##port##OUT &= ~BIT##bit; \
 
-#define PKT_LEN 64
+#define PKT_LEN 32
 
 //TODO put these functions somewhere else
 #ifdef RUN_ADC

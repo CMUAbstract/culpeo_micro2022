@@ -32,8 +32,8 @@ void burn();
 
 STARTER_EVT(starter);
 
-DEC_EVT(blink,blink,8000); //TODO translation from seconds to ticks
-DEC_EVT(blink2,blink2,7000); //TODO translation from seconds to ticks
+DEC_EVT(blink,blink,8000);
+DEC_EVT(blink2,blink2,7000);
 DEC_TSK(burn,burn);
 
 void starter() {
