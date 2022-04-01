@@ -54,12 +54,7 @@ __nv pubkey_t pubkey = {
 #include "../data/key64.txt"
 };
 
-__nv char PLAINTEXT[PLAINTEXT_SIZE] = {
-#include "../data/plaintext.txt"
-}
-;
-
-
+__nv char PLAINTEXT[PLAINTEXT_SIZE];
 __nv volatile uint8_t CYPHERTEXT[CYPHERTEXT_SIZE] = {0};
 __nv unsigned CYPHERTEXT_LEN = 0;
 

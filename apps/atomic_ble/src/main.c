@@ -14,7 +14,8 @@
 // Functions for the capybara board
 #include <libcapybara/board.h>
 #include <libradio/radio.h>
-
+#include <liblsm/gyro.h>
+#include <libfxl/fxl6408.h>
 // Catnap stand in
 #include <libfakecatnap/catnap.h>
 #include <libfakecatnap/events.h>
@@ -65,8 +66,30 @@ void starter() {
 
 void sense() {
   LCFN_INTERRUPTS_DISABLE;
+  // Init lsm6ds1
+  fxl_set(BIT_SENSE_SW);
+  __delay_cycles(640000);
+  gyro_init_data_rate_hm(0x80,1);
   PRINTF("Sense!\r\n");
   LCFN_INTERRUPTS_ENABLE;
+  uint16_t ax,ay,az,gx,gy,gz;
+  for (int i = 0; i < 20; i++) {
+    LCFN_INTERRUPTS_DISABLE;
+    // Grab IMU vals
+    read_raw_gyro(&gx,&gy,&gz);
+    read_raw_accel(&ax,&ay,&az);
+    PRINTF("%u ",i);
+    LCFN_INTERRUPTS_ENABLE;
+    // Write to pkt
+    // Fill in last 4 bytes!!
+    PLAINTEXT[(i << 4) + 0] = gx;
+    PLAINTEXT[(i << 4) + 2] = gy;
+    PLAINTEXT[(i << 4) + 4] = gz;
+    PLAINTEXT[(i << 4) + 6] = ax;
+    PLAINTEXT[(i << 4) + 8] = ay;
+    PLAINTEXT[(i << 4) + 10] = az;
+  }
+  lsm_disable(); //off
   add_event(&EVENT(encrypt));
   EVENT_RETURN();
 }
