@@ -16,6 +16,8 @@
 #include <libradio/radio.h>
 #include <liblsm/gyro.h>
 #include <libfxl/fxl6408.h>
+#include <libapds/proximity.h>
+
 // Catnap stand in
 #include <libfakecatnap/catnap.h>
 #include <libfakecatnap/events.h>
@@ -34,6 +36,7 @@
 
 //TODO put these functions somewhere else
 
+#define EXTRA_SLOTS 12
 
 void starter();
 void radio();
@@ -50,10 +53,9 @@ DEC_TSK(extra_sense,extra_sense);
 
 uint16_t min_reading = 0xFFFF;
 
-char __nv pkt[256] =  "hello world! we're going to the moon! we're going to the \
-moon!  hello world! we're going to the moon! we're going to mars!     hello \
-world! we're going to the moon! we're going to the pool! hello world! we're \
-going to the moon! we're going to sleep!    ";
+void app_hw_init(void) {
+  enable_photoresistor();
+}
 
 void starter() {
   PRINTF("off to the races!\r\n");
@@ -73,7 +75,7 @@ void sense() {
   PRINTF("Sense!\r\n");
   LCFN_INTERRUPTS_ENABLE;
   uint16_t ax,ay,az,gx,gy,gz;
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 16; i++) {
     LCFN_INTERRUPTS_DISABLE;
     // Grab IMU vals
     read_raw_gyro(&gx,&gy,&gz);
@@ -89,8 +91,10 @@ void sense() {
     PLAINTEXT[(i << 4) + 8] = ay;
     PLAINTEXT[(i << 4) + 10] = az;
   }
+  LCFN_INTERRUPTS_DISABLE;
   lsm_disable(); //off
-  add_event(&EVENT(encrypt));
+  LCFN_INTERRUPTS_ENABLE;
+  add_event(&EVENT(encrypt));//TODO add back in
   EVENT_RETURN();
 }
 
@@ -114,7 +118,7 @@ void radio() {
   for(int j = 0; j < 8; j++) {
     BIT_FLIP(1,0);
     for (unsigned i = 0; i < PKT_LEN; ++i) {
-        radio_buff[i] =*(((uint8_t *)&pkt) + (j*32)); }
+        radio_buff[i] =*(((uint8_t *)&PLAINTEXT) + (j*PKT_LEN)); }
     radio_send_one_off();
   }
   BIT_FLIP(1,1);
@@ -124,15 +128,27 @@ void radio() {
 
 void extra_sense() {
   while(1) { // Run perpetually
-    for (int k = 1; k < 0xff; k++) {
+    uint16_t light, light1;
+    for (int i = 0; i < 16; i++) {
+      LCFN_INTERRUPTS_DISABLE;
+      //PRINTF("\t\tStart task\r\n");
+      //enable_photoresistor();
+      light = read_photoresistor();
+      //Instead of delay?
+      //enable_photoresistor();
+      light1 = read_photoresistor();
+      LCFN_INTERRUPTS_ENABLE;
+      //TODO add an averaging step instead, write avg & stddev
       for( int j = 0; j < 0xff; j++) {
         for(int i = 0; i < 0xff; i++) {
           volatile uint16_t temp = i;
         }
       }
       LCFN_INTERRUPTS_DISABLE;
-      PRINTF("\t\tTasking %u\r\n",k);
+      PRINTF("Tasking %u!\r\n",i);
       LCFN_INTERRUPTS_ENABLE;
+      //PLAINTEXT[(i<<4) + 12] = light;
+      //PLAINTEXT[(i<<4) + 14] = light1;
     }
   }
 }
