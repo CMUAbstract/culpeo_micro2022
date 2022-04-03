@@ -46,9 +46,9 @@ void extra_sense();
 
 STARTER_EVT(starter);
 
-DEC_EVT(radio,radio,0); //Deschedules itself
-DEC_EVT(encrypt,encrypt,0);//Deschedules itself
-DEC_EVT(sense,sense,8000);
+DEC_EVT(radio,radio,8000,SPORADIC); //Deschedules itself
+DEC_EVT(encrypt,encrypt,8000,SPORADIC);//Deschedules itself
+DEC_EVT(sense,sense,8000,PERIODIC);
 DEC_TSK(extra_sense,extra_sense);
 
 uint16_t min_reading = 0xFFFF;
@@ -146,9 +146,10 @@ void extra_sense() {
       }
       LCFN_INTERRUPTS_DISABLE;
       PRINTF("Tasking %u!\r\n",i);
+      __delay_cycles(1000);
       LCFN_INTERRUPTS_ENABLE;
-      //PLAINTEXT[(i<<4) + 12] = light;
-      //PLAINTEXT[(i<<4) + 14] = light1;
+      PLAINTEXT[(i<<4) + 12] = light;
+      PLAINTEXT[(i<<4) + 14] = light1;
     }
   }
 }

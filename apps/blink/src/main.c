@@ -24,7 +24,6 @@
 	P##port##DIR |= BIT##bit; \
 	P##port##OUT &= ~BIT##bit; \
 
-
 void starter();
 void blink();
 void blink2();
@@ -32,9 +31,13 @@ void burn();
 
 STARTER_EVT(starter);
 
-DEC_EVT(blink,blink,8000);
-DEC_EVT(blink2,blink2,7000);
+DEC_EVT(blink,blink,8000,PERIODIC);
+DEC_EVT(blink2,blink2,7000,PERIODIC);
 DEC_TSK(burn,burn);
+
+void app_hw_init() {
+  return;
+}
 
 void starter() {
   BIT_FLIP(1,1);
@@ -45,9 +48,6 @@ void starter() {
   dec_event(&EVT_FCN_STARTER);
   EVENT_RETURN();
 }
-
-uint16_t val = 0;
-uint8_t new_adc_val = 0;
 
 void blink() { //16000
   LCFN_INTERRUPTS_DISABLE;
@@ -80,37 +80,3 @@ void burn() {
   return;
 }
 
-#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
-#pragma vector = ADC12_B_VECTOR
-__interrupt void ADC12_ISR(void)
-#elif defined(__GNUC__)
-void __attribute__ ((interrupt(ADC12_B_VECTOR))) ADC12_ISR (void)
-#else
-#error Compiler not supported!
-#endif
-{
-    switch(__even_in_range(ADC12IV, ADC12IV__ADC12RDYIFG))
-    {
-        case ADC12IV__ADC12IFG0:            // Vector 12:  ADC12MEM0 Interrupt
-            if (ADC12MEM0 >= 0x7ff)         // ADC12MEM0 = A1 > 0.5AVcc?
-                P1OUT |= BIT0;              // P1.0 = 1
-            else
-                P1OUT &= ~BIT0;             // P1.0 = 0
-
-            break;
-        default: break;
-    }
-}
-
-void __attribute__((interrupt(TIMER1_A0_VECTOR)))
-timerA1ISRHandler(void) {
-	  //TA1CCTL0 &= ~(CCIFG | CCIE); // Clear flag and stop int
-    //BIT_FLIP(1,0);
-    BIT_FLIP(1,4);
-    BIT_FLIP(1,5);
-    TA1R = 0;
-    val = read_adc();
-    new_adc_val = 1;
-    BIT_FLIP(1,1);
-    //TA1CCTL0 |= CCIE; // Re-enable timer int.
-}
