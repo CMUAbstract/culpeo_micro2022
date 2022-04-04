@@ -17,3 +17,11 @@
 - We extended the time libcapybara waits to do anything after it wakes up so we
   don't start while the capacitor is still recovering from the additional inrush
   current
+
+
+# Experiment configs
+- The atomic_ble experiment where we show that Catnap's energy based estimates
+  for Vsafe are bad uses a regulator dropping a launchpad's 3.3V input to 2.3V
+  output, and then uses a 470Ohm and 220Ohm resistors in parallel before
+  Vharv. This high current is necessary to get Capy to charge while the booster
+  is turned on, given that it's not really meant for this

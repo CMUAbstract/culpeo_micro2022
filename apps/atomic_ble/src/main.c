@@ -46,9 +46,11 @@ void extra_sense();
 
 STARTER_EVT(starter);
 
-DEC_EVT(radio,radio,8000,SPORADIC); //Deschedules itself
-DEC_EVT(encrypt,encrypt,8000,SPORADIC);//Deschedules itself
-DEC_EVT(sense,sense,8000,PERIODIC);
+#define BLE_PERIOD 24000
+
+DEC_EVT(radio,radio,BLE_PERIOD,SPORADIC); //Deschedules itself
+DEC_EVT(encrypt,encrypt,BLE_PERIOD,SPORADIC);//Deschedules itself
+DEC_EVT(sense,sense,BLE_PERIOD,PERIODIC);
 DEC_TSK(extra_sense,extra_sense);
 
 uint16_t min_reading = 0xFFFF;
@@ -69,6 +71,8 @@ void starter() {
 void sense() {
   LCFN_INTERRUPTS_DISABLE;
   // Init lsm6ds1
+  fxl_clear(BIT_SENSE_SW);
+  __delay_cycles(640000);
   fxl_set(BIT_SENSE_SW);
   __delay_cycles(640000);
   gyro_init_data_rate_hm(0x80,1);
