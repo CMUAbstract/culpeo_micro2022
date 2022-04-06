@@ -17,7 +17,7 @@ SHARED_DEPS +=  libmspbuiltins:gcc libio:gcc libcapybara:gcc  \
 export MAIN_CLOCK_FREQ = 8000000
 
 #export CLOCK_FREQ_ACLK = 32768
-export CLOCK_FREQ_ACLK = 8000
+export CLOCK_FREQ_ACLK = 32768
 
 export CLOCK_FREQ_SMCLK = $(MAIN_CLOCK_FREQ)
 export CLOCK_FREQ_MCLK = $(MAIN_CLOCK_FREQ)
