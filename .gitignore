@@ -5,3 +5,4 @@ apps/*/bld/
 apps/*/src/*.swp
 screenlog.*
 *.pdf
+*/__pycache__

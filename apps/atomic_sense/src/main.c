@@ -46,9 +46,23 @@ void extra_sense();
 
 STARTER_EVT(starter);
 
-#define BLE_PERIOD 8000
+#define BLE_PERIOD 10000
 
 DEC_EVT(sense,sense,BLE_PERIOD,PERIODIC);
+/*__nv evt_t EVT_sense = {
+   .evt = &sense, 
+    .energy = 39601,
+    .period = BLE_PERIOD, 
+    .periodic = PERIODIC, 
+    .burst_num = 1, 
+    .time_rdy = BLE_PERIOD, 
+    .valid = WAITING, 
+    .V_safe = 192, 
+    .V_min = 0, 
+    .V_final = 0,
+  };
+*/
+
 DEC_EVT(encrypt,encrypt,BLE_PERIOD,SPORADIC);//Deschedules itself
 DEC_TSK(extra_sense,extra_sense);
 
@@ -122,7 +136,10 @@ void encrypt() {
 void extra_sense() {
   while(1) { // Run perpetually
     uint16_t light, light1;
-    for (int i = 0; i < 16; i++) {
+    LCFN_INTERRUPTS_DISABLE;
+    PRINTF("Tasking!\r\n");
+    LCFN_INTERRUPTS_ENABLE;
+    for (int i = 0; i < 32; i++) {
       LCFN_INTERRUPTS_DISABLE;
       //PRINTF("\t\tStart task\r\n");
       //enable_photoresistor();
@@ -137,10 +154,6 @@ void extra_sense() {
           volatile uint16_t temp = i;
         }
       }
-      LCFN_INTERRUPTS_DISABLE;
-      PRINTF("Tasking %u!\r\n",i);
-      __delay_cycles(1000);
-      LCFN_INTERRUPTS_ENABLE;
       PLAINTEXT[(i<<4) + 12] = light;
       PLAINTEXT[(i<<4) + 14] = light1;
     }
