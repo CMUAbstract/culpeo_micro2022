@@ -1,7 +1,8 @@
 import numpy as np
 
 NUM_TAPS = 32
-DIVIDER = 4.22/14.22
+#DIVIDER = 4.22/14.22
+DIVIDER = 10/20
 
 refs = [1.2,2.0,2.5]
 
@@ -14,6 +15,8 @@ def calc_tap(val,divider,num_taps):
   for ref in refs:
     tap_val =  np.floor(num_taps*val*divider/ref)
     test = tap_val*ref/(num_taps*divider)
+    if tap_val > num_taps - 2:
+      continue
     if (abs(val - test) < diff):
       diff = abs(val - test)
       best_ref = ref
@@ -43,6 +46,11 @@ if __name__ == "__main__":
   for val in np.arange(1.4,2.5,.02):
     hndrds_str = str(int(100*val))
     print(hndrds_str,",")
+  for val in np.arange(1.4,2.5,.02):
+    print("Val:",val)
+    e_str = str(int((val*100)*(val*100)))
+    print(e_str,",")
+
   print("Total: ",total)
 
 
