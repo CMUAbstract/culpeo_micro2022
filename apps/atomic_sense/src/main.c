@@ -63,7 +63,7 @@ DEC_EVT(sense,sense,BLE_PERIOD,PERIODIC);
   };
 */
 
-DEC_EVT(encrypt,encrypt,BLE_PERIOD,SPORADIC);//Deschedules itself
+//DEC_EVT(encrypt,encrypt,BLE_PERIOD,SPORADIC);//Deschedules itself
 DEC_TSK(extra_sense,extra_sense);
 
 uint16_t min_reading = 0xFFFF;
@@ -112,15 +112,20 @@ void sense() {
   LCFN_INTERRUPTS_DISABLE;
   lsm_disable(); //off
   fxl_clear(BIT_SENSE_SW);
-  __delay_cycles(640000);
   LCFN_INTERRUPTS_ENABLE;
-  add_event(&EVENT(encrypt));//TODO add back in
+  __delay_cycles(640000);
+  //add_event(&EVENT(encrypt));//TODO add back in
   //encrypt_rsa(CYPHERTEXT,&CYPHERTEXT_LEN,PLAINTEXT,PLAINTEXT_SIZE,&pubkey);
   // Now scheduler radio
+  //encrypt_rsa(CYPHERTEXT,&CYPHERTEXT_LEN,PLAINTEXT,PLAINTEXT_SIZE,&pubkey);
+  //LCFN_INTERRUPTS_DISABLE;
+  //PRINTF("Encrypt! Done %u\r\n",CYPHERTEXT_LEN);
+  //LCFN_INTERRUPTS_ENABLE;
   BIT_FLIP(1,0);
   EVENT_RETURN();
 }
 
+#if 0
 void encrypt() {
   // Encrypt data
   encrypt_rsa(CYPHERTEXT,&CYPHERTEXT_LEN,PLAINTEXT,PLAINTEXT_SIZE,&pubkey);
@@ -132,15 +137,16 @@ void encrypt() {
   EVENT_RETURN();
 }
 
+#endif
 
 void extra_sense() {
   while(1) { // Run perpetually
     uint16_t light, light1;
     LCFN_INTERRUPTS_DISABLE;
-    PRINTF("Tasking!\r\n");
     LCFN_INTERRUPTS_ENABLE;
     for (int i = 0; i < 32; i++) {
       LCFN_INTERRUPTS_DISABLE;
+      //PRINTF("Tasking!\r\n");
       //PRINTF("\t\tStart task\r\n");
       //enable_photoresistor();
       light = read_photoresistor();
