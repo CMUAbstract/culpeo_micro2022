@@ -25,3 +25,6 @@
   output, and then uses a 470Ohm and 220Ohm resistors in parallel before
   Vharv. This high current is necessary to get Capy to charge while the booster
   is turned on, given that it's not really meant for this
+- atomic_sense was run with a potentiometer set at 243 Ohms (same LDO config as
+  atomic_ble), 2 edlc caps + 2 330uF caps, and used -O1 optimization with *no*
+  -g flag
