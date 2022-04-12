@@ -46,7 +46,7 @@ void extra_sense();
 
 STARTER_EVT(starter);
 
-#define BLE_PERIOD 30000
+#define BLE_PERIOD 45000
 
 DEC_EVT(radio,radio,BLE_PERIOD,SPORADIC); //Deschedules itself
 DEC_EVT(encrypt,encrypt,BLE_PERIOD,SPORADIC);//Deschedules itself
@@ -65,6 +65,7 @@ void app_hw_init(void) {
   // Init interrupt on P1.5
   P1DIR &= ~BIT5; //input
   P1REN |= BIT5; //pulldown
+  P1IFG = 0;
   P1IES &= ~BIT5; //low to high
   P1IE |= BIT5; //enable int
 #endif
@@ -133,14 +134,20 @@ void encrypt() {
 }
 
 void radio() {
+  P1IE &= ~BIT5;//Disable extra interrupt
+  dec_event(&EVENT(radio));
   PRINTF("Radio!\r\n");
   for(int j = 0; j < 8; j++) {
     for (unsigned i = 0; i < PKT_LEN; ++i) {
         radio_buff[i] =*(((uint8_t *)&PLAINTEXT) + (j*PKT_LEN)); }
     radio_send_one_off();
   }
+  /*Emulate low power listen*/
+  __delay_cycles(8000000);
+  __delay_cycles(8000000);
   BIT_FLIP(1,1);
-  dec_event(&EVENT(radio));
+  //dec_event(&EVENT(radio));
+  P1IE |= BIT5;//Disable extra interrupt
   EVENT_RETURN();
 }
 
@@ -149,6 +156,11 @@ void extra_sense() {
     uint32_t avg_sum0;
     uint32_t avg_sum1;
     uint16_t light, light1;
+    LCFN_INTERRUPTS_DISABLE;
+    P1IE &= ~BIT5;//Disable extra interrupt
+    PRINTF("Tasking!\r\n");
+    P1IE |= BIT5;//Disable extra interrupt
+    LCFN_INTERRUPTS_ENABLE;
     for (int i = 0; i < 16; i++) {
       avg_sum0 = 0;
       avg_sum1 = 0;
@@ -175,7 +187,7 @@ port1_handler(void) {
   P1IE &= ~BIT5;
   P1IFG = 0;
   add_event(&EVENT(sense));
-  PRINTF("Adding event!\r\n");
+  //PRINTF("Adding event int!\r\n");
   P1IE |= BIT5;
   INT_RETURN;
 }

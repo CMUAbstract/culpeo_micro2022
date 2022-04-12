@@ -22,9 +22,14 @@
 # Experiment configs
 - The atomic_ble experiment where we show that Catnap's energy based estimates
   for Vsafe are bad uses a regulator dropping a launchpad's 3.3V input to 2.3V
-  output, and then uses a 470Ohm and 220Ohm resistors in parallel before
-  Vharv. This high current is necessary to get Capy to charge while the booster
-  is turned on, given that it's not really meant for this
+  output, and then uses a 243Ohm potentiometer before Vharv. It also relies on
+  an arduino hooked up over a level shifter sending gpio flips to P1.5 with a
+  poisson distribution of lambda=45 seconds. Also, a saleae needs to be
+  measuring the input to the adc/comparator otherwise it goes haywire. The
+  results are stored in
+  culpeo_measurements/runtime_tests/atomic_ble_culpeo_latest_10min and
+  atomic_ble_catnap_15min. You'll need to trim catnap since we lost the first
+  100s of culpeo to its profiling.
 - atomic_sense was run with a potentiometer set at 243 Ohms (same LDO config as
   atomic_ble), 2 edlc caps + 2 330uF caps, and used -O1 optimization with *no*
   -g flag. Also, we were running on the ACLK timer configured (using maker to a
