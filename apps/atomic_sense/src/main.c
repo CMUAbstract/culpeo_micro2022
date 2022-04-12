@@ -46,7 +46,7 @@ void extra_sense();
 
 STARTER_EVT(starter);
 
-#define BLE_PERIOD 10000
+#define BLE_PERIOD 15000
 
 DEC_EVT(sense,sense,BLE_PERIOD,PERIODIC);
 /*__nv evt_t EVT_sense = {

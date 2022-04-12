@@ -27,4 +27,6 @@
   is turned on, given that it's not really meant for this
 - atomic_sense was run with a potentiometer set at 243 Ohms (same LDO config as
   atomic_ble), 2 edlc caps + 2 330uF caps, and used -O1 optimization with *no*
-  -g flag
+  -g flag. Also, we were running on the ACLK timer configured (using maker to a
+  frequency of 32768 with a divider of 8. This isn't slow enough for other apps
+  though
