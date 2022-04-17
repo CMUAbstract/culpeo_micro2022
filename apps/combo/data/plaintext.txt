@@ -1,0 +1,1 @@
+"We show that ESR drop breaks assumptions of prior systems about safe task execution,as no prior system considers the ESR effect.To enable correct reasoning, we develop Culpeo, a tool that provides a safe voltage level for tasks by characterizing ESR drop"

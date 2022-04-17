@@ -15,6 +15,9 @@ def calc_tap(val,divider,num_taps):
   for ref in refs:
     tap_val =  np.floor(num_taps*val*divider/ref)
     test = tap_val*ref/(num_taps*divider)
+    while(test < val):
+      tap_val += 1
+      test = tap_val*ref/(num_taps*divider)
     if tap_val > num_taps - 2:
       continue
     if (abs(val - test) < diff):

@@ -1,4 +1,5 @@
-# Script to pull the timing violations out of atomic_<app> tests.
+# Script to pull the timing violations out of atomic_ble tests where start and
+# end are separated and never happen twice.
 # Those data live over in culpeo_measurements/runtime_tests
 
 import pandas as pd
@@ -12,8 +13,8 @@ import glob
 import pickle
 from matplotlib.ticker import AutoMinorLocator
 
-EVT_LEN = 0.4
-DEADLINE = 3.0
+EVT_LEN = 4
+DEADLINE = 6
 TIME_INDEX = 9
 
 if __name__ == "__main__":
@@ -37,23 +38,27 @@ if __name__ == "__main__":
     times = vals[:,TIME_INDEX:TIME_INDEX+2]
     times = times[times[:,1] == 1]
     times = times[:,0]
-    last = times[0]
+    #print(times)
     first = times[0]
-    second = times[1]
+    second = -1
     violations = []
+    responses = []
     for i in range(1,len(times)):
       # Assume we already have the first
-      if times[i] < first + EVT_LEN:
-        second = times[i]
-        last = first
+      if first != -1:
+        second = times [i]
       else:
-        # We're on the first
         first = times[i]
-      if (first > last + DEADLINE):
-        print("Violation!",first,last,i)
-        violations.append(first-last)
+      if (first != -1 and second != -1):
+        if second - first > DEADLINE:
+          violations.append(second - first)
+          print("Violation:",first,second,i)
+        responses.append(second - first)
+        first = -1;
+        second = -1;
     print("Total:",len(violations))
-    print("Average:",np.average(violations))
+    print("Average for violations:",np.average(violations))
+    print("Average for all:",np.average(responses))
 
 
 

@@ -49,3 +49,6 @@
 [submodule "ext/libculpeo"]
 	path = ext/libculpeo
 	url = git@github.com:CMUAbstract/libculpeo.git
+[submodule "libdsp"]
+	path = ext/libdsp
+	url = git@github.com:CMUAbstract/libdsp_msp430.git

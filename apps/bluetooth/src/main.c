@@ -45,8 +45,10 @@ uint16_t read_adc(void) {
   // Take single sample when timer triggers and compare with threshold
   ADC12IFGR0 &= ~ADC12IFG0;
   // Use ADC12SC to trigger and single-channel
-  ADC12CTL1 |= ADC12SHP | ADC12SHS_0 | ADC12CONSEQ_0 ;
-  ADC12CTL0 |= (ADC12ON + ADC12ENC + ADC12SC); 			// Trigger ADC conversion
+  //ADC12CTL1 |= ADC12SHP | ADC12SHS_0 | ADC12CONSEQ_0 ;
+  //ADC12CTL0 |= (ADC12ON + ADC12ENC + ADC12SC); 			// Trigger ADC conversion
+  ADC12CTL0 |= ADC12SC;                   // Start conversion
+	ADC12CTL0 &= ~ADC12SC;                  // We only need to toggle to start conversion
 
   while(!(ADC12IFGR0 & ADC12IFG0)); 			// Wait till conversion over
   uint16_t adc_reading = ADC12MEM0; 					// Read ADC value
@@ -80,6 +82,7 @@ int main(void) {
       break;
     }
   }
+#ifdef RUN_TIMER
   ADC_ENABLE;
   // Run timer
   __delay_cycles(1000);
@@ -88,6 +91,7 @@ int main(void) {
 	TA1CCR0 = 8000;
 	TA1CTL = MC__UP | TASSEL__SMCLK;
   TA1CCTL0 = CCIE;
+#endif
   // done
   for (unsigned i = 0; i < PKT_LEN; ++i) {
       radio_buff[i] =*(((uint8_t *)&pkt) + i); }
@@ -107,10 +111,12 @@ int main(void) {
       radio_send_one_off();
     }
     BIT_FLIP(1,1);
+#ifdef RUN_TIMER
     ADC_DISABLE;
     TA1CCTL0 &= ~CCIE;
     __delay_cycles(8000);
     PRINTF("Min val: %u\r\n",min_reading);
+#endif
     while(1);
   }
   return 0;

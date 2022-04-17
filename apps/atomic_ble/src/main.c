@@ -128,26 +128,33 @@ void encrypt() {
   add_event(&EVENT(radio));
   dec_event(&EVENT(encrypt));
   LCFN_INTERRUPTS_DISABLE;
-  PRINTF("Encrypt! Done\r\n");
+  PRINTF("Encrypt! Done %u %u\r\n",CYPHERTEXT_LEN,CYPHERTEXT_SIZE);
   LCFN_INTERRUPTS_ENABLE;
   EVENT_RETURN();
 }
 
 void radio() {
   P1IE &= ~BIT5;//Disable extra interrupt
-  dec_event(&EVENT(radio));
   PRINTF("Radio!\r\n");
-  for(int j = 0; j < 8; j++) {
+  uint8_t val;
+  for(int j = 0; j < 10; j++) {
     for (unsigned i = 0; i < PKT_LEN; ++i) {
-        radio_buff[i] =*(((uint8_t *)&PLAINTEXT) + (j*PKT_LEN)); }
+        if (j*PKT_LEN + i > CYPHERTEXT_LEN) {
+          val = 0;
+        } else {
+          val = *(((uint8_t *)&CYPHERTEXT) + (j*PKT_LEN) + i);
+        }
+      radio_buff[i] = val ;
+    }
     radio_send_one_off();
   }
   /*Emulate low power listen*/
   __delay_cycles(8000000);
   __delay_cycles(8000000);
-  BIT_FLIP(1,1);
+  BIT_FLIP(1,0);
   //dec_event(&EVENT(radio));
-  P1IE |= BIT5;//Disable extra interrupt
+  dec_event(&EVENT(radio));
+  P1IE |= BIT5;// Enable extra interrupt
   EVENT_RETURN();
 }
 
