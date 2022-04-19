@@ -10,18 +10,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import re
 import glob
-import pickle
+import pickle as pkl
 from matplotlib.ticker import AutoMinorLocator
 
 EVT_LEN = 4
-DEADLINE = 6
+DEADLINE = 5
 TIME_INDEX = 9
 
 if __name__ == "__main__":
   num_files = len(sys.argv)
-  i = 1
+  out_name = sys.argv[1]
+  num_files = len(sys.argv) - 1
+  i = 2
   all_files = []
-  while i < num_files:
+  lost_vals = [] # Fraction of total
+  delay_vals = []
+  while i < num_files + 1:
     all_files.append(sys.argv[i])
     i += 1
   for filename in all_files:
@@ -43,6 +47,7 @@ if __name__ == "__main__":
     second = -1
     violations = []
     responses = []
+    total = 0
     for i in range(1,len(times)):
       # Assume we already have the first
       if first != -1:
@@ -56,9 +61,14 @@ if __name__ == "__main__":
         responses.append(second - first)
         first = -1;
         second = -1;
-    print("Total:",len(violations))
+    print("Total:",len(violations),"/",len(responses))
     print("Average for violations:",np.average(violations))
     print("Average for all:",np.average(responses))
+    lost_vals.append(len(violations)/(len(responses)))
+    delay_vals.append(np.average(violations))
+  results = {'lost':np.average(lost_vals),'lost_std':np.std(lost_vals),\
+  'delay':np.average(delay_vals),'delay_std':np.std(delay_vals)}
+  pkl.dump(results,open(out_name,"wb"))
 
 
 

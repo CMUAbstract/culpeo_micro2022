@@ -247,6 +247,12 @@ port1_handler(void) {
   add_event(&EVENT(radio));
   //PRINTF("Adding event int!\r\n");
   P1IE |= BIT5;
-  INT_RETURN;
+  if(curctx->mode == TASK) {
+    //need checkpoint
+    TA0CCTL0 |= CCIFG;
+  }
+  else {
+    INT_RETURN;
+  }
 }
 #endif
