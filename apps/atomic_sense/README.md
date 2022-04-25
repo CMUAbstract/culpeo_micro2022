@@ -7,3 +7,5 @@ of those in apps/blink
 
 Application just runs gyro and then encrypts it, with some photoresistor reading
 on the side
+
+This is the PS appication in the Micro 2022 eval.
