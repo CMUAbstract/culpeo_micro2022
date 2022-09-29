@@ -67,11 +67,67 @@ uint16_t read_adc(void) {
 
 #endif
 
-
 uint16_t min_reading = 0xFFFF;
+
+unsigned read_light() {
+	// set GPIO expander
+  P1OUT |= BIT0;
+  P1DIR |= BIT0;
+	fxl_out(BIT_PHOTO_SW);
+	fxl_set(BIT_PHOTO_SW);
+  P1OUT &= ~BIT0;
+
+	// Config the ADC on the comparator pin
+	P3SEL0 |= BIT0;	
+	P3SEL1 |= BIT0;	
+
+	// ADC setup
+	ADC12CTL0 &= ~ADC12ENC;           // Disable conversions
+	ADC12CTL1 = ADC12SHP;
+	//ADC12MCTL0 = ADC12VRSEL_1 | ADC12INCH_12;
+	ADC12MCTL0 = ADC12VRSEL_0 | ADC12INCH_12;
+	ADC12CTL0 |= ADC12SHT03 | ADC12ON;
+
+	while( REFCTL0 & REFGENBUSY );
+
+	__delay_cycles(1000);                   // Delay for Ref to settle
+
+	ADC12CTL0 |= ADC12ENC;                  // Enable conversions
+	ADC12CTL0 |= ADC12SC;                   // Start conversion
+	ADC12CTL0 &= ~ADC12SC;                  // We only need to toggle to start conversion
+	while (ADC12CTL1 & ADC12BUSY) ;
+
+	unsigned output = (unsigned)ADC12MEM0;
+
+	ADC12CTL0 &= ~ADC12ENC;                 // Disable conversions
+	ADC12CTL0 &= ~(ADC12ON);                // Shutdown ADC12
+	REFCTL0 &= ~REFON;
+
+  P1OUT |= BIT0;
+  P1DIR |= BIT0;
+	fxl_clear(BIT_PHOTO_SW);
+  P1OUT &= ~BIT0;
+
+	return output;
+}
+
+#define WINDOW_SIZE 16
 
 int main(void) {
   capybara_init();
+  fxl_clear(BIT_PHOTO_SW);
+  for(int i = 0; i < 10; i++) {
+  unsigned light = 0;
+	for (unsigned j = 0; j < WINDOW_SIZE; ++j) {
+    light += read_light();
+    msp_sleep(10);
+  }
+  PRINTF("Light val: %u\r\n",light/WINDOW_SIZE);
+  light = 0;
+  __delay_cycles(8000000);
+  }
+
+
   char pkt[64] =  "hello world! we're going to the moon! we're going to the moon!  ";
   char pkt1[64] =  "hello world! we're going to the moon! we're going to mars!     ";
   char pkt2[64] =  "hello world! we're going to the moon! we're going to the pool! ";

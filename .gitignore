@@ -8,3 +8,4 @@ screenlog.*
 */__pycache__
 *.out
 *.log
+tools/scripts/*.csv
