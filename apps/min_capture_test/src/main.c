@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdint.h>
-//#include <string.h>
 #include <stdio.h>
 
 // Built-in libraries for the msp430
@@ -112,22 +111,15 @@ int main(void) {
 }
 
 #ifdef RUN_ADC
-
 void __attribute__((interrupt(TIMER1_A0_VECTOR)))
 timerA1ISRHandler(void) {
-	  //TA1CCTL0 &= ~(CCIFG | CCIE); // Clear flag and stop int
-    //BIT_FLIP(1,0);
     uint16_t val;
-    //BIT_FLIP(1,1);
     TA1R = 0;
     val = read_adc();
     if (min_reading > val) {
       min_reading = val;
     }
     __bic_SR_register_on_exit(LPM0_bits);
-   //BIT_FLIP(1,1);
-   //BIT_FLIP(1,1);
-    //TA1CCTL0 |= CCIE; // Re-enable timer int.
 }
 #else
 // P1.4 interrupt

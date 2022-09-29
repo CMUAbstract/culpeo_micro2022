@@ -2,7 +2,8 @@ TOOLS_REL_ROOT = tools
 TOOLS =
 TOOLCHAINS = gcc
 
-APPS = blink bluetooth synth_tests atomic_ble atomic_sense combo
+APPS =  responsive_reporting periodic_sensing noise_monitor \
+        blink bluetooth min_capture_test
 
 SHARED_DEPS =
 
@@ -10,7 +11,6 @@ SHARED_DEPS =
 export CHKPT_TYPE = _chkpt
 
 include Makefile.capy
-
 
 include tools/maker/Makefile
 

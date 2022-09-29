@@ -16,12 +16,6 @@
 [submodule "ext/libartibeus"]
 	path = ext/libartibeus
 	url = git@github.com:CMUAbstract/libartibeus-ctrl.git
-[submodule "ext/libads"]
-	path = ext/libads
-	url = git@github.com:CMUAbstract/libads.git
-[submodule "ext/libgnss"]
-	path = ext/libgnss
-	url = git@github.com:CMUAbstract/libgnss.git
 [submodule "ext/libcapybara"]
 	path = ext/libcapybara
 	url = git@github.com:CMUAbstract/libcapybara.git
@@ -31,9 +25,6 @@
 [submodule "ext/libapds"]
 	path = ext/libapds
 	url = git@github.com:CMUAbstract/libapds.git
-[submodule "ext/librustic"]
-	path = ext/librustic
-	url = git@github.com:CMUAbstract/jit_atomics.git
 [submodule "ext/libradio"]
 	path = ext/libradio
 	url = git@github.com:CMUAbstract/libradio.git
@@ -46,9 +37,6 @@
 [submodule "ext/libfakecatnap"]
 	path = ext/libfakecatnap
 	url = git@github.com:CMUAbstract/libfakecatnap.git
-[submodule "ext/libculpeo"]
-	path = ext/libculpeo
-	url = git@github.com:CMUAbstract/libculpeo.git
 [submodule "libdsp"]
 	path = ext/libdsp
 	url = git@github.com:CMUAbstract/libdsp_msp430.git

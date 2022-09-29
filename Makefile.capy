@@ -16,7 +16,6 @@ SHARED_DEPS +=  libmspbuiltins:gcc libio:gcc libcapybara:gcc  \
 # Config stuff
 export MAIN_CLOCK_FREQ = 8000000
 
-#export CLOCK_FREQ_ACLK = 32768
 export CLOCK_FREQ_ACLK = 32768
 
 export CLOCK_FREQ_SMCLK = $(MAIN_CLOCK_FREQ)
@@ -35,10 +34,12 @@ export LIBMSPUARTLINK_CLK = SMCLK
 
 export LIBCAPYBARA_PIN_VBOOST_OK = 3.6
 
-export LIBCAPYBARA_CONT_POWER ?= 0
 export LIBCAPYBARA_VBANK_COMP_REF = 1.2 # V
 export LIBCAPYBARA_VBANK_COMP_SETTLE_MS = 2
 export LIBCAPYBARA_JIT = 1
+
+# Set this flag to 1 for testing on continuous power
+export LIBCAPYBARA_CONT_POWER ?= 0
 
 ifeq ($(LIBCAPYBARA_JIT),1)
 export LIBCAPYBARA_DEEP_DISCHARGE = 1.82 # V
@@ -87,6 +88,8 @@ export LIBCAPYBARA_FXL_OFF = 0
 export VOLTAGE = 2400
 
 LIBCAPYBARA_LEAN_INIT ?= 1
+
+# For enabling printf
 
 CONSOLE ?= 1
 
