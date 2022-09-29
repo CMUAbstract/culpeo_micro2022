@@ -6,7 +6,7 @@ RUN_TIMER = 0
 
 EXEC = capy
 
-DEPS =  libcapybara:gcc libfxl:gcc libads:gcc libio:gcc \
+DEPS =  libcapybara:gcc libfxl:gcc libio:gcc \
 				libmspware:gcc  libradio:gcc libmsp:gcc libmspuartlink:gcc
 
 ifeq ($(RUN_ADC),1)

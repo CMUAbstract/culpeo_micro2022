@@ -15,7 +15,7 @@ RUN_INT = 1
 LOCAL_CFLAGS  = 
 
 DEPS =  liblsm:gcc libapds:gcc libfakecatnap:gcc libcapybara:gcc \
-       libfxl:gcc libads:gcc libio:gcc libradio:gcc\
+       libfxl:gcc libio:gcc libradio:gcc\
 				libmspware:gcc libmsp:gcc libmspuartlink:gcc
 
 

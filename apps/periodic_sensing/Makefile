@@ -11,7 +11,7 @@ export CULPEO_ADC_THRESHOLD = 2200
 
 
 DEPS =  liblsm:gcc libapds:gcc libfakecatnap:gcc libcapybara:gcc \
-       libfxl:gcc libads:gcc libio:gcc libradio:gcc\
+       libfxl:gcc libio:gcc libradio:gcc\
 				libmspware:gcc libmsp:gcc libmspuartlink:gcc
 
 override CFLAGS += -I../../data/
