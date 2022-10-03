@@ -54,26 +54,36 @@ Run the following commands *from this top level directory* to clean, build and
 program an application on the Capybara dev board:
 
  `make apps/<app name>/bld/gcc/clean;`
+
  `make apps/<app name>/bld/gcc/depclean;`
+
  `make apps/<app name>/bld/gcc/all;`
+
  `make apps/<app name>/bld/gcc/prog;`
+
 
 E.g.
  `make apps/responsive_reporting/bld/gcc/clean;`
+
  `make apps/responsive_reporting/bld/gcc/depclean;`
+
  `make apps/responsive_reporting/bld/gcc/all;`
+
  `make apps/responsive_reporting/bld/gcc/prog;`
 
 
 [0] E. Ruppel, M. Surbatovich, H. Desai, K. Maeng and B. Lucia, "An
 Architectural Charge Management Interface for Energy-Harvesting Systems," MICRO,
 2022.
+
 [1] K. Maeng and B. Lucia, “Adaptive low-overhead scheduling for periodic and
 reactive intermittent execution,” in Proceedings of the 41st ACM SIGPLAN
 Conference on Programming Language Design and Implementation, 2020, pp.
 1005–1021
+
 [2] Maker: a dependency builder for C code. Alexei Colin.
 https://github.com/CMUAbstract/maker.git
+
 [3] A. Colin, E. Ruppel, and B. Lucia, “A reconfigurable energy storage
 architecture for energy-harvesting devices,” in Proceedings of the Twenty-Third
 International Conference on Architectural Support for Programming Languages and
